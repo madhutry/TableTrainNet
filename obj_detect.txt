@@ -1,23 +1,17 @@
-# Faster R-CNN with Resnet-50 (v1),
+# Faster R-CNN with Resnet
+# Sync-trained on COCO (8 GPUs),
 # Initialized from Imagenet classification checkpoint
-#
-# Train on GPU-8
-#
-# Achieves 31.4 mAP on COCO17 val
+# TF2-Compatible, *Not* TPU-Compatible
 
 model {
   faster_rcnn {
     num_classes: 1
     image_resizer {
-      fixed_shape_resizer {
-        width: 400
-        height: 400
+      keep_aspect_ratio_resizer {
+        min_dimension: 800
+        max_dimension: 1333
+        pad_to_max_dimension: true
       }
-#      keep_aspect_ratio_resizer {
-#        min_dimension: 800
-#        max_dimension: 1333
-#        pad_to_max_dimension: true
-#      }
     }
     feature_extractor {
       type: 'faster_rcnn_resnet50_keras'
@@ -134,7 +128,6 @@ train_config: {
     }
   }
 }
-
 train_input_reader: {
   label_map_path: "/content/TableTrainNet/data/object-detection.pbtxt"
   tf_record_input_reader {
